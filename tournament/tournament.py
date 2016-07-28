@@ -36,7 +36,7 @@ def countPlayers():
     db, cursor = connect()
     cursor.execute("SELECT COUNT(*) FROM players")
     result = cursor.fetchone()
-    totalPlayers = int(result[0][0])
+    totalPlayers = int(result[0])
     db.close()
     return totalPlayers
 
@@ -71,10 +71,7 @@ def playerStandings():
     """
     db, cursor = connect()
     cursor.execute("SELECT * FROM rankings")
-    standings = [(row[0],
-                  row[1],
-                  int(row[2]),
-                  int(row[3])) for row in cursor.fetchall()]
+    standings = cursor.fetchall()
     db.close()
     return standings
 
