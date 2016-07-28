@@ -12,7 +12,7 @@ CREATE DATABASE tournament;
 CREATE TABLE players (id serial primary key, name varchar);
 
 -- Create Table for Matches
-CREATE TABLE matches (match serial primary key, winner integer references
+CREATE TABLE matches (matchId serial primary key, winner integer references
 	players(id), loser integer references players(id));
 
 -- Create View for Rankings
