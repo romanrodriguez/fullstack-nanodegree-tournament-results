@@ -18,7 +18,8 @@ def connect(database_name="tournament"):
 def deleteMatches():
     """Remove all the match records from the database."""
     db, cursor = connect()
-    cursor.execute("DELETE FROM matches")
+    query = "DELETE FROM matches;"
+    cursor.execute(query)
     db.commit()
     db.close()
 
@@ -26,7 +27,8 @@ def deleteMatches():
 def deletePlayers():
     """Remove all the player records from the database."""
     db, cursor = connect()
-    cursor.execute("DELETE FROM players")
+    query = "DELETE FROM players;"
+    cursor.execute(query)
     db.commit()
     db.close()
 
@@ -34,7 +36,8 @@ def deletePlayers():
 def countPlayers():
     """Returns the number of players currently registered."""
     db, cursor = connect()
-    cursor.execute("SELECT COUNT(*) FROM players")
+    query = "SELECT COUNT(*) FROM players;"
+    cursor.execute(query)
     result = cursor.fetchone()
     totalPlayers = int(result[0])
     db.close()
@@ -51,7 +54,9 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     db, cursor = connect()
-    cursor.execute("INSERT into players (name) values (%s)", (name,))
+    query = "INSERT INTO players (name) VALUES (%s);"
+    param = (name,)
+    cursor.execute(query, param)
     db.commit()
     db.close()
 
@@ -70,7 +75,8 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     db, cursor = connect()
-    cursor.execute("SELECT * FROM rankings")
+    query = "SELECT * FROM rankings;"
+    cursor.execute(query)
     standings = cursor.fetchall()
     db.close()
     return standings
@@ -84,8 +90,10 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db, cursor = connect()
-    cursor.execute("INSERT INTO matches (winner, loser) \
-                       VALUES (%s, %s)", (winner, loser,))
+    query = "INSERT INTO matches (winner, loser) \
+                       VALUES (%s, %s);"
+    param = (winner, loser,)
+    cursor.execute(query, param)
     db.commit()
     db.close()
 
@@ -108,6 +116,8 @@ def swissPairings():
     standings = playerStandings()
     players = countPlayers()
     pairings = []
+    # could use the zip function here by slightly refactoring this part of
+    # the method. https://docs.python.org/2/library/functions.html#zip
     for i in range(0, players, 2):
         player1 = (standings[i][0], standings[i][1])
         player2 = (standings[i+1][0], standings[i+1][1])
